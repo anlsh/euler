@@ -9,15 +9,15 @@
   (return-from divisor-in-list nil)
   )
 
-(defun inclusive-primes-under (upbound)
+(defun primes-leq (upbound)
   (if (< upbound 2)
-      (return-from inclusive-primes-under nil))
-
+      (return-from primes-leq nil))
   (let* ((prime-list (list 2)) (i 3))
     (loop while (<= i upbound) do
-      (if (not (divisor-in-list i prime-list))
-          (append prime-list i))
+      (format t "~d" i)
+      (when (not (divisor-in-list i prime-list))
+          (nconc prime-list (list i)))
       (setq i (+ i 2)))
-    (return-from inclusive-primes-under prime-list)
+    (return-from primes-leq prime-list)
     )
   )
