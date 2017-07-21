@@ -14,7 +14,6 @@
       (return-from primes-leq nil))
   (let* ((prime-list (list 2)) (i 3))
     (loop while (<= i upbound) do
-      (format t "~d" i)
       (when (not (divisor-in-list i prime-list))
           (nconc prime-list (list i)))
       (setq i (+ i 2)))
