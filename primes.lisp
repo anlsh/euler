@@ -1,6 +1,7 @@
 (provide 'primes)
 
 (defun divisor-in-list (i testlist)
+  "Evaluates every element in testlist to see if any divide i"
   (dolist (n testlist)
     (if (= 0 (mod i n))
         (return-from divisor-in-list t)
@@ -10,6 +11,7 @@
   )
 
 (defun primes-leq (upbound)
+  "Given a forward-sorted list, see if any elements divide i"
 
   (if (< upbound 2)
       (return-from primes-leq nil))
