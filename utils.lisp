@@ -15,8 +15,20 @@
   (let* ((prime-list (list 2)) (i 3))
     (loop while (<= i upbound) do
       (when (not (divisor-in-list i prime-list))
-          (nconc prime-list (list i)))
+        (nconc prime-list (list i)))
       (setq i (+ i 2)))
     (return-from primes-leq prime-list)
+    )
+  )
+
+(defun first-n-primes (n)
+  (if (< n 1)
+      (return-from first-n-primes nil))
+  (let* ((prime-list (list 2)) (i 3))
+    (loop while (< (length prime-list) n) do
+      (when (not (divisor-in-list i prime-list))
+        (nconc prime-list (list i)))
+      (setq i (+ i 2)))
+    (return-from first-n-primes prime-list)
     )
   )
