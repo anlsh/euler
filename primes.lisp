@@ -1,4 +1,4 @@
-(provide 'utils)
+(provide 'primes)
 
 (defun divisor-in-list (i testlist)
   (dolist (n testlist)
