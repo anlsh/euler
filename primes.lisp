@@ -32,7 +32,7 @@
       (return-from primes-leq nil))
   (if (= upbound 2)
       (return-from primes-leq (list 2)))
-  (if (= upbound 2)
+  (if (= upbound 3)
       (return-from primes-leq (list 2 3)))
 
   ;; Take advantage of the fact that prime triples dont exist
