@@ -12,6 +12,7 @@
 
 (defun divisor-in-slist (i testlist)
   "Given a forward-sorted list, see if any elements divide i"
+  ;; TODO Use binary search to take advantage of sortedness
   (let* ((upbound (sqrt i)))
     (dolist (n testlist)
       (when (> n upbound) (return))
@@ -28,6 +29,9 @@
   )
 
 (defun primes-leq (upbound &optional (prime-list nil))
+  "Return a list of all prime numbers less than or equal to upbound.
+  If prime-list is non-nil, it must be a sorted list containing exactly the
+  the prime numbers <=less than the last entry"
 
   (if (< upbound 2)
       (return-from primes-leq nil))
