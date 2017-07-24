@@ -43,15 +43,19 @@
   ;; Take advantage of the fact that prime triples dont exist
   ;; TODO Generalize to arbitrary step sizes using FLT for coprimality
   (let* ((i 6) (biggest (car (last prime-list))))
-    (if prime-list
-        (setq i (+ 6 (if (= 1 (mod biggest 6)) -1 1)))
-      (setq prime-list (list 2 3)))
+    (setq i
+          (if (or (not prime-list) (member biggest '(2 3)))
+              6
+              (if (= (mod biggest 6) 1) (+ biggest 5) (+ biggest 1))
+              )
+          )
+    (unless prime-list (setq prime-list (list 2 3)))
     (loop while (<= (- i 1) upbound) do
-      (when (not (divisor-in-slist (- i 1) prime-list))
+      (unless (divisor-in-slist (- i 1) prime-list)
         (nconc prime-list (list (- i 1))))
-      (when (not (divisor-in-slist (+ i 1) prime-list))
+      (when (and (<= (+ i 1) upbound) (not (divisor-in-slist (+ i 1) prime-list)))
         (nconc prime-list (list (+ i 1))))
-      (setq i (+ i 6)))
+      (incf i 6))
     (return-from primes-leq prime-list)
     )
   )
