@@ -14,11 +14,12 @@
   "Given a forward-sorted list, see if any elements divide i"
   (let* ((upbound (sqrt i)))
     (dolist (n testlist)
-      (when (> i upbound) (return))
+      (when (> n upbound) (return))
       (if (= 0 (mod i n))
           (return-from divisor-in-slist t)
           )
       ))
+  (when (member i testlist) (return-from divisor-in-slist t))
   (return-from divisor-in-slist nil)
   )
 
