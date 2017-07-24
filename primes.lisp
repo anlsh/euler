@@ -24,10 +24,6 @@
   (return-from divisor-in-slist nil)
   )
 
-(defun factor (n &optional (prime-list nil))
-  (let ((factor-list nil)))
-  )
-
 (defun primes-leq (upbound &optional (prime-list nil))
   "Return a list of all prime numbers less than or equal to upbound.
   If prime-list is non-nil, it must be a sorted list containing exactly the
