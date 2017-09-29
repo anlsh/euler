@@ -10,6 +10,17 @@
   (return-from divisor-in-list nil)
   )
 
+;; (defun primes ()
+;;   (let* ((p (list 2)) (n 3))
+;;     (lambda ()
+;;       (loop while (divisor-in-slist n p)
+;;             do (incf n 2))
+;;       (nconc p (list n))
+;;       (+ n 0)
+;;       )
+;;     )
+;;   )
+
 (defun divisor-in-slist (i testlist)
   "Given a forward-sorted list, see if any elements divide i"
   ;; TODO Use binary search to take advantage of sortedness
