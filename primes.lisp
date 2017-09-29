@@ -10,16 +10,21 @@
   (return-from divisor-in-list nil)
   )
 
-;; (defun primes ()
-;;   (let* ((p (list 2)) (n 3))
-;;     (lambda ()
-;;       (loop while (divisor-in-slist n p)
-;;             do (incf n 2))
-;;       (nconc p (list n))
-;;       (+ n 0)
-;;       )
-;;     )
-;;   )
+(defun primes (&aux (p (list 2)) (n 2) f)
+  "Lazily generate primes"
+  ;; https://stackoverflow.com/questions/46496083/lazily-generating-prime-in-common-lisp
+  (labels ((f2 ()            ; a function for the first iteration
+             (incf n)
+             (setf f #'fn)   ; setting f to the next function
+             2)
+           (fn ()            ; a function for all other iterations
+             (loop while (divisor-in-list n p)
+                   do (incf n 2))
+             (push n p)
+             n))
+    (setf f #'f2)            ; setting f to the first function
+    (lambda ()               ; returning a closure
+      (funcall f))))         ;   which calls the current f
 
 (defun divisor-in-slist (i testlist)
   "Given a forward-sorted list, see if any elements divide i"
