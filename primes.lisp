@@ -91,48 +91,18 @@
   "Return a list of all prime numbers less than or equal to upbound.
   If prime-list is non-nil, it must be a sorted list containing exactly the
   the prime numbers <=less than the last entry"
-
-  (if (< upbound 2)
-      (return-from primes-leq nil))
-  (if (= upbound 2)
-      (return-from primes-leq (list 2)))
-  (if (= upbound 3)
-      (return-from primes-leq (list 2 3)))
-
-  ;; Take advantage of the fact that prime triples dont exist
-  ;; TODO Generalize to arbitrary step sizes using FLT for coprimality
-  (let* ((i 6) (biggest (car (last prime-list))))
-    (setq i
-          (if (or (not prime-list) (member biggest '(2 3)))
-              6
-              (if (= (mod biggest 6) 1) (+ biggest 5) (+ biggest 1))
-              )
+  (let ((p (primes)) (n 2))
+    (funcall p)
+    (loop while (<= n upbound)
+          collect n
+          do (setq n (funcall p))
           )
-    (unless prime-list (setq prime-list (list 2 3)))
-    (loop while (<= (- i 1) upbound) do
-      (unless (divisor-in-slist (- i 1) prime-list)
-        (nconc prime-list (list (- i 1))))
-      (when (and (<= (+ i 1) upbound) (not (divisor-in-slist (+ i 1) prime-list)))
-        (nconc prime-list (list (+ i 1))))
-      (incf i 6))
-    (return-from primes-leq prime-list)
     )
   )
 
 (defun first-n-primes (n)
-  (if (< n 1)
-      (return-from first-n-primes nil))
-
-  ;; See note in primes-leq
-  (let* ((prime-list (list 2 3)) (i 6))
-    (loop while (< (length prime-list) n) do
-      (when (not (divisor-in-slist (- i 1) prime-list))
-        (nconc prime-list (list (- i 1))))
-      (when (not (divisor-in-slist (+ i 1) prime-list))
-        (nconc prime-list (list (+ i 1))))
-      (setq i (+ i 6)))
-    (when (= (length prime-list) (+ n 1))
-        (return-from first-n-primes (butlast prime-list)))
-    (return-from first-n-primes prime-list)
+  (let ((p (primes)))
+    (loop for x from 1 to n
+          collect (funcall p))
     )
   )
