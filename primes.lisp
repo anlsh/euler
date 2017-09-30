@@ -10,19 +10,24 @@
   (return-from divisor-in-list nil)
   )
 
-(defun primes (&aux (p (list 2)) (n 2) f)
+(defun primes (&optional (plist nil) &aux (p plist) (n 2) f)
   "Lazily generate primes"
   ;; https://stackoverflow.com/questions/46496083/lazily-generating-prime-in-common-lisp
-  (labels ((f2 ()            ; a function for the first iteration
+  (labels ((fbare ()            ; a function for the first iteration
+             (setf f #'fgen)   ; setting f to the next function
+             (push 2 p)
              (incf n)
-             (setf f #'fn)   ; setting f to the next function
              2)
-           (fn ()            ; a function for all other iterations
+           (fgen ()            ; a function for all other iterations
              (loop while (divisor-in-list n p)
                    do (incf n 2))
              (push n p)
              n))
-    (setf f #'f2)            ; setting f to the first function
+    (if plist (setq n (car (last plist))))
+    (if (= n 2)
+        (setf f #'fbare)     ; setting f to the first function
+        (setf f #'fgen)
+        )
     (lambda ()               ; returning a closure
       (funcall f))))         ;   which calls the current f
 
@@ -87,22 +92,40 @@
     )
   )
 
-(defun primes-leq (upbound &optional (prime-list nil))
+(defun primes-leq (upbound &optional (prime-list nil)
+                   &aux (p (primes prime-list)) (llist (cons 0 nil)) (tail llist) n)
   "Return a list of all prime numbers less than or equal to upbound.
   If prime-list is non-nil, it must be a sorted list containing exactly the
   the prime numbers <=less than the last entry"
-  (let ((p (primes)) (n 2))
-    (funcall p)
-    (loop while (<= n upbound)
-          collect n
-          do (setq n (funcall p))
-          )
-    )
+  (loop for x in prime-list
+        do (if (<= x upbound)
+            (progn (setf (cdr tail) (cons x nil))
+                   (setf tail (cdr tail)))
+            (return-from primes-leq (cdr llist))
+            )
+        )
+  (setq n (funcall p))
+  (loop while (<= n upbound)
+        do (progn (setf (cdr tail) (cons n nil))
+                  (setf tail (cdr tail))
+                  (setq n (funcall p))
+                  )
+        )
+  (return-from primes-leq (cdr llist))
   )
 
-(defun first-n-primes (n)
-  (let ((p (primes)))
-    (loop for x from 1 to n
-          collect (funcall p))
-    )
+(defun first-n-primes (n &optional prime-list &aux (size 0) (p (primes prime-list))
+                                                (llist (cons 0 nil)) (tail llist))
+  (loop for u in prime-list
+        while (< size n)
+        do (setf (cdr tail) (cons u nil))
+           (setf tail (cdr tail))
+           (incf size)
+        )
+  (loop while (< size n)
+        do (setf (cdr tail) (cons (funcall p) nil))
+           (setf tail (cdr tail))
+           (incf size)
+        )
+  (return-from first-n-primes (cdr llist))
   )
