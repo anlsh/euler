@@ -1,5 +1,7 @@
 (load "fibonacci.lisp")
+(load "primes.lisp")
 (require 'fibonacci)
+(require 'primes)
 
 
 (defun problem2 ()
@@ -29,3 +31,15 @@
         (if (and (ispalindrome test) (> test maxpalindrome))
             (setq maxpalindrome test)))))
   maxpalindrome)
+
+(defun problem4 (&aux (n 20) (multiple 1))
+  (loop for p in (primes-leq 20) do
+    (setq multiple (* multiple (expt p (floor (log n p))))))
+  multiple
+  )
+
+(defun problem5 ()
+  (- (expt (loop for i from 1 to 100 sum i) 2) (loop for i from 1 to 100 sum (* i i))))
+
+(defun problem6 ()
+  (nth 10000 (first-n-primes 10001)))
