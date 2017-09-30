@@ -20,3 +20,12 @@
     (if (not (= (digit n x base) (digit n (- len 1 x) base)))
         (return-from ispalindrome nil)))
   t)
+
+(defun problem3 (&aux (maxpalindrome 0))
+  (loop for x from 999 downto 100
+    until (< (* x x) maxpalindrome) do
+    (loop for y from x downto 100 do
+      (let* ((test (* x y)))
+        (if (and (ispalindrome test) (> test maxpalindrome))
+            (setq maxpalindrome test)))))
+  maxpalindrome)
