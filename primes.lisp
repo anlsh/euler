@@ -67,27 +67,24 @@
   (return-from factor (cdr factors))
   )
 
-(defun primes-leq (upbound &optional (prime-list nil)
-                   &aux (p (primes prime-list)) (llist (cons 0 nil)) (tail llist) n)
+(defun primes-leq (upbound &optional (known-primes nil)
+                   &aux (pgen (primes known-primes))
+                     (leqprimes (list 0)) (tail (last leqprimes)) p)
+
   "Return a list of all prime numbers less than or equal to upbound.
   If prime-list is non-nil, it must be a sorted list containing exactly the
   the prime numbers <=less than the last entry"
-  (loop for x in prime-list
-        do (when (<= x upbound)
-            (setf (cdr tail) (cons x nil))
-            (setf tail (cdr tail)))
-            (return-from primes-leq (cdr llist))
-            )
-        )
-  (setq n (funcall p))
-  (loop while (<= n upbound)
-        do (progn (setf (cdr tail) (cons n nil))
-                  (setf tail (cdr tail))
-                  (setq n (funcall p))
-                  )
-        )
-  (return-from primes-leq (cdr llist))
-  )
+  (loop for p in known-primes
+        do (when (> p upbound)
+             (return-from primes-leq (cdr leqprimes)))
+           (setf (cdr tail) (cons p nil))
+           (setf tail (cdr tail)))
+
+  (setf (cdr leqprimes)
+        (loop do (setq p (funcall pgen))
+              while (<= p upbound)
+              collect p))
+  (cdr leqprimes))
 
 (defun first-n-primes (n &optional prime-list &aux (size 0) (p (primes prime-list))
                                                 (llist (cons 0 nil)) (tail llist))
