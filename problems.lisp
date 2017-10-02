@@ -55,3 +55,6 @@
           (setq maxproduct product))))
   maxproduct
   )
+
+(defun problem10 ()
+  (loop for p in (primes-leq 2000000) sum p))
