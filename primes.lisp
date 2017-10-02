@@ -10,38 +10,38 @@
   (return-from divisor-in-list nil)
   )
 
-(defun primes (&optional (plist nil) &aux (p plist) (n 2) f)
-  "Lazily generate primes"
+(defun primes (&optional (known-primes nil) &aux (plist (copy-list known-primes)) tail n f)
+  "Lazily generate primes based on a given list of known primes"
   ;; https://stackoverflow.com/questions/46496083/lazily-generating-prime-in-common-lisp
-  (labels ((fbare ()            ; a function for the first iteration
-             (setf f #'fgen)   ; setting f to the next function
-             (push 2 p)
-             (incf n)
-             2)
-           (fgen ()            ; a function for all other iterations
-             (loop while (divisor-in-list n p)
-                   do (incf n 2))
-             (push n p)
-             n))
-    (if plist (setq n (car (last plist))))
-    (if (= n 2)
-        (setf f #'fbare)     ; setting f to the first function
-        (setf f #'fgen)
-        )
-    (lambda ()               ; returning a closure
-      (funcall f))))         ;   which calls the current f
+  (defun fbare ()
+    (setf f #'fgen)   ; setting f to the next function
+    (setq plist (list 2))
+    (setf tail (last plist))
+    (setq n 3)
+    2)
+  (defun fgen ()
+    (loop while (divisor-in-slist n plist)
+          do (incf n 2))
+    (setf (cdr tail) (cons n nil))
+    (setf tail (cdr tail))
+    n)
+  (when plist
+    (setq n (car (last plist)))
+    (setf tail (last plist)))
+  (if (not plist)
+      (setf f #'fbare)
+      (setf f #'fgen))
+  (lambda ()
+    (funcall f)))
 
-(defun divisor-in-slist (i testlist)
+(defun divisor-in-slist (i testlist &aux (upbound (sqrt i)))
   "Given a forward-sorted list, see if any elements divide i"
   ;; TODO Use binary search to take advantage of sortedness
-  (let* ((upbound (sqrt i)))
-    (dolist (n testlist)
-      (when (> n upbound) (return))
-      (if (= 0 (mod i n))
-          (return-from divisor-in-slist t)
-          )
-      ))
-  (when (member i testlist) (return-from divisor-in-slist t))
+  (loop for p in testlist while (<= p upbound) do
+    (if (zerop (mod i p))
+        (return-from divisor-in-slist t)))
+  (if (member i testlist)
+      (return-from divisor-in-slist t))
   (return-from divisor-in-slist nil)
   )
 
@@ -73,9 +73,9 @@
   If prime-list is non-nil, it must be a sorted list containing exactly the
   the prime numbers <=less than the last entry"
   (loop for x in prime-list
-        do (if (<= x upbound)
-            (progn (setf (cdr tail) (cons x nil))
-                   (setf tail (cdr tail)))
+        do (when (<= x upbound)
+            (setf (cdr tail) (cons x nil))
+            (setf tail (cdr tail)))
             (return-from primes-leq (cdr llist))
             )
         )
