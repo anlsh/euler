@@ -1,27 +1,27 @@
-(load "fibonacci.lisp")
-(load "primes.lisp")
-(require 'fibonacci)
-(require 'primes)
+(load "numbers.lisp")
+(require 'numbers)
 
+
+(defun problem1 ()
+  (let ((i 3) (sum 0))
+    (loop while (< i 1000) do
+      (incf sum i)
+      (incf i 3))
+    (setq i 5)
+    (loop while (< i 1000) do
+      (incf sum i)
+      (incf i 5))
+    (setq i 15)
+    (loop while (< i 1000) do
+      (decf sum i)
+      (incf i 15))
+    (return-from problem1 sum)
+    )
+  )
 
 (defun problem2 ()
   (loop for x in (fibonacci-leq 4000000) if (evenp x) sum x)
   )
-
-(defun digit (num exp &optional (base 10))
-  "Returns the coefficient of base^exp in base-base representation of num"
-  (mod (floor (/ num (expt base exp))) base))
-
-(defun numdigits (n &optional (base 10))
-  "Returns the number of digits in the base-representation of n"
-  (ceiling (log n base)))
-
-(defun ispalindrome (n &optional (base 10) &aux (len (numdigits n base)))
-  "Returns true if n is palindromic in base, false elsewhere"
-  (loop for x from 0 to (ceiling (/ len 2)) do
-    (if (not (= (digit n x base) (digit n (- len 1 x) base)))
-        (return-from ispalindrome nil)))
-  t)
 
 (defun problem3 (&aux (maxpalindrome 0))
   (loop for x from 999 downto 100
@@ -60,6 +60,7 @@
   (loop for p in (primes-leq 2000000) sum p))
 
 (defun problem13 ()
+  "This doesn't technically solve the problem, it just returns the sum"
   (+ 37107287533902102798797998220837590246510135740250
 46376937677490009712648124896970078050417018260538
 74324986199524741059474233309513058123726617309629
