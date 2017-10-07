@@ -1,5 +1,9 @@
 (provide 'numbers)
 
+(defun factorial (n)
+  (if (= n 0) (return-from factorial 1)
+      (return-from factorial (* n (factorial (- n 1))))))
+
 (defun divisor-in-list (i testlist)
   "Evaluates every element in testlist to see if any divide i"
   (dolist (n testlist)
