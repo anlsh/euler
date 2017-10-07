@@ -1,7 +1,4 @@
-# Dailyprogrammer challenge at
-#https://www.reddit.com/r/dailyprogrammer/wiki/
-#index#wiki_solution_submission_tutorial
-
+# Dailyprogrammer challenge at https://goo.gl/KXz5e5
 import queue
 
 def touch(p1, p2, r):
