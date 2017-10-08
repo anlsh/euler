@@ -161,3 +161,18 @@
     (if (not (= (digit n x base) (digit n (- len 1 x) base)))
         (return-from ispalindrome nil)))
   t)
+
+(defun palindromes-length (length &optional (base 10) &aux palindrome-list)
+  "Return all palindromes of length length in base"
+  (when (= length 1)
+    (return-from palindromes-length (loop for d from 1 to (- base 1) collect d)))
+
+  (when (= length 2)
+    (return-from palindromes-length (loop for d from 1 to (- base 1) collect (+ d (* base d)))))
+
+  (loop for i from 1 to (- base 1) do
+    (loop for p in (concatenate 'list (palindromes-length (- length 2) base) '(0)) do
+      (push (+ (* base p) i (* i (expt base (- length 1)))) palindrome-list)))
+
+  palindrome-list
+  )
