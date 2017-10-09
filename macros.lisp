@@ -9,3 +9,6 @@
       (let* ((head (car (last indices))) (tail (butlast indices)))
         `(aref (multi-index ,array ,@tail) ,head)))
   )
+
+(defmacro sethash (key hash-table value)
+  `(setf (gethash ,key ,hash-table) ,value))
