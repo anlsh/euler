@@ -1,3 +1,6 @@
+(load "macros.lisp")
+(require 'macros)
+
 (provide 'numbers)
 
 (defun factorial (n)
@@ -154,6 +157,35 @@
 (defun numdigits (n &optional (base 10))
   "Returns the number of digits in the base-representation of n"
   (floor (+ 1 (log n base))))
+
+(defun modexpt (base exp &optional (modbase 10)
+                &aux (mod->index (make-hash-table)) (modchain (list 1)))
+  "Return (base ^ exp) % modbase. You should probably be using the
+   cl-utilities version of this instead"
+  (if (zerop exp)
+      (return-from modexpt 1))
+  (sethash 1 mod->index 0)
+  (loop with answer = 1 with entry with cyclelength
+        for e from 1 to modbase do
+          (setf answer (mod (* answer base) modbase))
+          (setf entry (gethash answer mod->index))
+          (when (= e exp)
+            (return-from modexpt answer))
+          (unless entry
+            (sethash answer mod->index e)
+            (push answer modchain))
+          (when entry
+            (setf cyclelength (- e entry))
+            (return-from modexpt (nth (- cyclelength (mod (- exp e) cyclelength) 1)
+                                      modchain)))))
+
+(defun modmult (nums &optional base &aux (result 1))
+  (loop for n in nums do (setf result (mod (* result (mod n base)) base)))
+  result)
+
+(defun modadd (nums &optional base &aux (result 0))
+  (loop for n in nums do (setf result (mod (+ result (mod n base)) base)))
+  result)
 
 (defun ispalindrome (n &optional (base 10) &aux (len (numdigits n base)))
   "Returns true if n is palindromic in base, false elsewhere"
