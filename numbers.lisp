@@ -1,4 +1,4 @@
-(load "macros.lisp")
+(load "~/Code/euler/macros.lisp")
 (require 'macros)
 
 (provide 'numbers)
