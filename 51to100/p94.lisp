@@ -1,5 +1,5 @@
 (defun solve94 (&aux (max-perimeter 1000000000) (perimeter-sum 0))
-  (loop for ss from 2 to (/ max-perimeter 3) do
+  (loop for ss from 1 to (/ max-perimeter 1) do
     (loop for su in (list (- ss 1) (+ ss 1)) do
       (when (is-perfect-square (triangle-area-squared (list ss ss su)))
         (format t "~a~%" (list ss ss su))
