@@ -40,7 +40,7 @@
     (setq n 3)
     2)
   (defun fgen ()
-    (loop while (or (not (= (modexpt (- n 1) n n) (- n 1)))
+    (loop while (or (not (= (modexpt n (- n 1) n) (- n 1)))
                      (divisor-in-slist n plist))
           do (incf n 2))
     (setf (cdr tail) (cons n nil))
@@ -159,7 +159,7 @@
   "Returns the number of digits in the base-representation of n"
   (floor (+ 1 (log n base))))
 
-(defun modexpt (base exp &optional (modbase 10)
+(defun modexpt (modbase base exp
                 &aux (mod->index (make-hash-table)) (modchain (list 1)))
   "Return (base ^ exp) % modbase. You should probably be using the
    cl-utilities version of this instead"
@@ -180,11 +180,11 @@
             (return-from modexpt (nth (- cyclelength (mod (- exp e) cyclelength) 1)
                                       modchain)))))
 
-(defun modmult (nums &optional base &aux (result 1))
+(defun modmult (base &rest nums &aux (result 1))
   (loop for n in nums do (setf result (mod (* result (mod n base)) base)))
   result)
 
-(defun modadd (nums &optional base &aux (result 0))
+(defun modadd (base &rest nums &aux (result 0))
   (loop for n in nums do (setf result (mod (+ result (mod n base)) base)))
   result)
 
