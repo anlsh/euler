@@ -3,7 +3,7 @@ import heapq
 MAX_INDEX = 79
 def solvematrix(start, successorfunc, terminal):
 
-    with open("p81_matrix.txt") as f:
+    with open("p81to83_matrix.txt") as f:
         grid = f.readlines()
         for index, strline in enumerate(grid):
             grid[index] = [int(s) for s in strline.split(",")]
@@ -20,6 +20,7 @@ def solvematrix(start, successorfunc, terminal):
                 return cost
         else:
             continue
+
         for snodex, snodey in successorfunc(node):
             heapq.heappush(unvisited, (cost + grid[snodey][snodex], (snodex, snodey)))
 
@@ -80,7 +81,11 @@ def solve81():
     return solvematrix((0, 0), successors81, lambda pos: pos == (MAX_INDEX, MAX_INDEX))
 
 def solve82():
-    return min([solvematrix((i, 0), successors82, lambda pos: pos[1] == MAX_INDEX) for i in range(MAX_INDEX + 1)])
+    sweepcosts = []
+    for row in range(MAX_INDEX + 1):
+        cost = solvematrix((0, row), successors82, lambda pos: pos[0] == MAX_INDEX)
+        sweepcosts.append(cost)
+    return min(sweepcosts)
 
 def solve83():
     return solvematrix((0, 0), successors83, lambda pos: pos == (MAX_INDEX, MAX_INDEX))
