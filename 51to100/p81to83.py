@@ -3,7 +3,6 @@ import heapq
 MAX_INDEX = 79
 def solvematrix(start, successorfunc, terminal):
 
-    num = []
     with open("p81_matrix.txt") as f:
         grid = f.readlines()
         for index, strline in enumerate(grid):
@@ -81,7 +80,7 @@ def solve81():
     return solvematrix((0, 0), successors81, lambda pos: pos == (MAX_INDEX, MAX_INDEX))
 
 def solve82():
-    return min([solvematrix((i, 0), successors82, lambda pos: pos[0] == MAX_INDEX) for i in range(MAX_INDEX + 1)])
+    return min([solvematrix((i, 0), successors82, lambda pos: pos[1] == MAX_INDEX) for i in range(MAX_INDEX + 1)])
 
 def solve83():
     return solvematrix((0, 0), successors83, lambda pos: pos == (MAX_INDEX, MAX_INDEX))
