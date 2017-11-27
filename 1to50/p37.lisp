@@ -41,7 +41,7 @@
     (setf sieve-array (make-array block-size :element-type 'boolean :initial-element t))
     (loop for prime in prime-list do
       (kill-multiples prime))
-    (loop for index from 0 to (- (array-dimension sieve-array 0) 1) do
+    (loop for index from 0 to (array-dimension sieve-array 0) do
       (when (aref sieve-array index)
         (setf real-num (+ index (* block-num block-size)))
         (when (> real-num 1)
