@@ -26,7 +26,7 @@
       (loop for i from (* p p) to n by (* 2 p)  ; mark the multiples
             do (setf (aref arr i) nil)))))
 
-(defun prime-generator (&aux (prime-list nil) (sieve-array nil) (block-num -1) block-size (real-num 0))
+(snakes:defgenerator make-prime-generator (&aux (prime-list nil) (sieve-array nil) (block-num -1) block-size (real-num 0))
 
   (setf block-size 1000000)
 
@@ -45,6 +45,7 @@
       (when (aref sieve-array index)
         (setf real-num (+ index (* block-num block-size)))
         (when (> real-num 1)
-          (format t "~a is prime ~%" real-num)
+          ;; "Yield"
+          (snakes:yield real-num)
           (push real-num prime-list)
           (kill-multiples real-num))))))
