@@ -49,3 +49,7 @@
           (snakes:yield real-num)
           (push real-num prime-list)
           (kill-multiples real-num))))))
+
+(defun primes-leq-g (upbound)
+  (loop with primes = (make-prime-generator) for prime = (funcall primes)
+        while (<= prime upbound) collect prime))
