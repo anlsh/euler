@@ -26,24 +26,25 @@
       (loop for i from (* p p) to n by (* 2 p)  ; mark the multiples
             do (setf (aref arr i) nil)))))
 
-(defun prime-generator (&aux (prime-list nil) (sieve-array nil) (block-num 0) (block-size 1000000) (real-num 0))
+(defun prime-generator (&aux (prime-list nil) (sieve-array nil) (block-num -1) block-size (real-num 0))
 
-  (defun kill-multiples-of (factor-num &aux marker-index)
-    (setf marker-index (mod (- factor-num (mod (* block-num block-size) factor-num)) factor-num))
+  (setf block-size 1000000)
+
+  (defun kill-multiples (factor-num &aux marker-index)
+    (setf marker-index (rem (* block-num block-size) factor-num))
     (loop while (< marker-index block-size) do
       (setf (aref sieve-array marker-index) nil)
       (incf marker-index factor-num)))
 
   (loop while t do
+    (incf block-num)
     (setf sieve-array (make-array block-size :element-type 'boolean :initial-element t))
     (loop for prime in prime-list do
-      (kill-multiples-of prime))
-    (loop for index from 0 to (array-dimension sieve-array 0) do
+      (kill-multiples prime))
+    (loop for index from 0 to (- (array-dimension sieve-array 0) 1) do
       (when (aref sieve-array index)
         (setf real-num (+ index (* block-num block-size)))
         (when (> real-num 1)
           (format t "~a is prime ~%" real-num)
-          ;; (sleep 1)
           (push real-num prime-list)
-          (kill-multiples-of real-num))))
-    (incf block-num)))
+          (kill-multiples real-num))))))
