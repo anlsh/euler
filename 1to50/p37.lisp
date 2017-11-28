@@ -28,7 +28,7 @@
 
 (snakes:defgenerator make-prime-generator (&aux (prime-list nil) (sieve-array nil) (block-num -1) block-size (real-num 0))
 
-  (setf block-size 1000000)
+  (setf block-size 100000)
 
   (defun kill-multiples (factor-num &aux marker-index)
     (setf marker-index (rem (* block-num block-size) factor-num))
