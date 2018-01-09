@@ -12,3 +12,6 @@
 
 (defmacro sethash (key hash-table value)
   `(setf (gethash ,key ,hash-table) ,value))
+
+(defmacro generate-next (generator)
+  `(funcall generator))
