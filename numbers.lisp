@@ -153,6 +153,8 @@
 
 (defun digit (num exp &optional (base 10))
   "Returns the coefficient of base^exp in base-base representation of num"
+  (when (< exp 0)
+    (return-from digit (digit (* num (expt base (* -1 exp))) 0)))
   (mod (floor (/ num (expt base exp))) base))
 
 (defun numdigits (n &optional (base 10))
